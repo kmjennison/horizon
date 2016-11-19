@@ -1,0 +1,24 @@
+# This file is for local development.
+
+version: '2'
+services:
+
+  rethinkdb:
+    image: rethinkdb
+    expose:
+      - "28015"
+      - "8080"
+    restart: always
+
+  horizon:
+    image: rethinkdb/horizon
+    command: su -s /bin/sh horizon -c "hz serve --dev --connect rethinkdb --bind all /usr/app"
+    volumes:
+      - ./app:/usr/app
+    links:
+      - rethinkdb
+    depends_on:
+      - rethinkdb
+    ports:
+      - "80:8181"
+    restart: always
